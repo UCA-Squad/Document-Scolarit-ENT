@@ -27,6 +27,14 @@ class EtudiantController extends AbstractController
         $rns = $finder->getFiles($dir_rn);
         $attests = $finder->getFiles($dir_attest);
 
+        usort($rns, function ($a, $b) {
+            return $b->getMTime() - $a->getMTime();
+        });
+
+        usort($attests, function ($a, $b) {
+            return $b->getMTime() - $a->getMTime();
+        });
+
         $data = [];
 
         $i = 0;
