@@ -41,8 +41,16 @@ class ScolaController extends AbstractController
                 $num = $user->getAttribute("CLFDcodeEtu")[0];
                 $nb_rn = count($this->finder->getFilesName($this->file_access->getRn() . $num . '/'));
                 $nb_attest = count($this->finder->getFilesName($this->file_access->getAttest() . $num . '/'));
-                $user->setAttribute('nb_docs', [$nb_rn + $nb_attest]);
-                $filtered_users[] = $user->getAttributes();
+
+                $simpleUser = [
+                    'CLFDcodeEtu' => $num,
+                    'sn' => $user->getAttribute('sn')[0],
+                    'givenName' => $user->getAttribute('givenName')[0],
+                    'supannEntiteAffectationPrincipale' => $user->getAttribute('supannEntiteAffectationPrincipale')[0],
+                    'nb_docs' => $nb_rn + $nb_attest
+                ];
+
+                $filtered_users[] = $simpleUser;
             }
         }
 
