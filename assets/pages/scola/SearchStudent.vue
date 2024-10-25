@@ -3,14 +3,14 @@
   <div class="container">
 
     <div class="row justify-content-md-center">
-      <h2>Rechercher les documents d'un étudiant</h2>
+      <h3>Rechercher les documents d'un étudiant</h3>
     </div>
 
     <div class="mt-3">
       <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Nom ou code étudiant</label>
-        <input type="text" v-model="searchField" class="form-control" id="exampleFormControlInput1"
-               placeholder="Jeant dupont | 2320215210">
+        <label for="searchFieldInput" class="form-label">Nom ou code étudiant</label>
+        <input type="text" v-model="searchField" @keyup.enter="searchStudent" class="form-control" id="searchFieldInput"
+               placeholder="Dupont | 2320215210">
       </div>
 
       <div class="mb-3">

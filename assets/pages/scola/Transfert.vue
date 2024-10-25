@@ -1,7 +1,7 @@
 <template>
   <div style="text-align: center">
-    <h2 style="display: inline-block;margin: 0 auto">Transfert de
-      {{ this.nbDocToTransfert }} / {{ this.students.length }} documents</h2>
+    <h3 style="display: inline-block;margin: 0 auto">Transfert de
+      {{ this.nbDocToTransfert }} / {{ this.students.length }} documents</h3>
   </div>
 
   <div v-if="!tranfert_done" class="row justify-content-md-center"
@@ -42,14 +42,20 @@
       </div>
     </div>
 
-    <div style="text-align: center;margin-bottom: 20px;margin-top: 20px;margin-right: 50px">
+    <div style="text-align: center" class="mt-2 mb-2">
       <h5><strong>Voulez-vous envoyer un mail de notification aux étudiants concernés ?</strong></h5>
       <div class="row justify-content-md-center">
-        <button style="margin-right: 10px" v-on:click="sendMails(false)" class="btn btn-secondary" type="button">Non
-        </button>
-        <button class="btn btn-primary" v-on:click="sendMails(true)" type="button">Oui</button>
+        <div class="col-auto">
+          <button class="btn btn-primary" v-on:click="sendMails(true)" type="button">Oui
+          </button>
+        </div>
+        <div class="col-auto">
+          <button v-on:click="sendMails(false)" class="btn btn-secondary" type="button">Non
+          </button>
+        </div>
       </div>
     </div>
+
   </div>
 
 </template>
