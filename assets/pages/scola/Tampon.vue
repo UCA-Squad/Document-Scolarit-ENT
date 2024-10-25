@@ -1,7 +1,7 @@
 <template>
 
   <img alt="tampon" style="z-index: 1; position: absolute" id="draggable" draggable="true"
-       v-on:mousedown="onMouseDown" :src="WebService().getSrcTampon() + this.mode">
+       v-on:mousedown="onMouseDown" v-on:dragstart="preventDrag" :src="WebService().getSrcTampon() + this.mode">
 
   <button class="btn btn-primary mb-2" type="button" v-on:click="applyTampon">Appliquer le tampon</button>
 
@@ -57,8 +57,11 @@ export default {
       this.lastX = event.clientX;
       this.lastY = event.clientY;
 
-      console.log(img.style.left, img.style.top);
+      // console.log(img.style.left, img.style.top);
 
+    },
+    preventDrag(event) {
+      event.preventDefault();
     },
     onMouseUp(event) {
       this.dragging = false;
@@ -101,7 +104,7 @@ export default {
     window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('mouseup', this.onMouseUp);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('mouseup', this.onMouseUp);
   }
