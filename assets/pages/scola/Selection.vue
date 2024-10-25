@@ -91,7 +91,7 @@ export default {
         },
         {field: "name", headerName: "Nom"},
         {field: "surname", headerName: "Prenom"},
-        {field: "birthday", headerName: "Date de naissance"},
+        {field: "birthday", headerName: "Date de naissance", comparator: this.dateComparator},
         {field: "mail", headerName: "Mail"},
         {
           headerName: "Relevé", flex: 2, cellRenderer: params => {
@@ -115,6 +115,13 @@ export default {
     }
   },
   methods: {
+    dateComparator(date1, date2) { // compare deux dates au format d/m/Y
+      const [day1, month1, year1] = date1.split('/').map(Number);
+      const [day2, month2, year2] = date2.split('/').map(Number);
+      const d1 = new Date(year1, month1 - 1, day1);
+      const d2 = new Date(year2, month2 - 1, day2);
+      return d1 - d2;
+    },
     fetchSelection() {
       WebService.getSelection(this.mode).then(response => {
         console.log(response.data);
@@ -128,7 +135,7 @@ export default {
       this.selectedRows = event.api.getSelectedRows();
     },
     OnGO() {
-      if (confirm("En continuant, les documents séléctionnés seront transférés.")) {
+      if (confirm("En continuant, les documents sélectionnés seront transférés.")) {
         this.$emit('selected', this.selectedRows.map(r => r.numero), this.students, this.data);
       }
     },
