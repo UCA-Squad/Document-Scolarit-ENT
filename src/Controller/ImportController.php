@@ -42,7 +42,7 @@ class ImportController extends AbstractController
     #[Route('/imported/{id}')]
     public function getImportedFiles(ImportedData $import, Security $security): JsonResponse
     {
-        if (!$security->isGranted('ROLE_ADMIN') || $import->getUsername() !== $this->getUser()->getUserIdentifier())
+        if (!$security->isGranted('ROLE_ADMIN') && $import->getUsername() !== $this->getUser()->getUserIdentifier())
             return new JsonResponse("Vous n'avez pas les droits pour accéder à cette ressource", 403);
 
         if (!$import->isRn()) {
