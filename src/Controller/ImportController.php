@@ -17,6 +17,7 @@ use setasign\Fpdi\PdfParser\PdfParserException;
 use setasign\Fpdi\PdfParser\Type\PdfTypeException;
 use setasign\Fpdi\PdfReader\PdfReaderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,9 +40,12 @@ class ImportController extends AbstractController
     }
 
     #[Route('/imported/{id}')]
-    public function getImportedFiles(ImportedData $import): JsonResponse
+    public function getImportedFiles(ImportedData $import, Security $security): JsonResponse
     {
-        if (empty($import->getSemestre()) && empty($import->getSession())) {
+        if (!$security->isGranted('ROLE_ADMIN') || $import->getUsername() !== $this->getUser()->getUserIdentifier())
+            return new JsonResponse("Vous n'avez pas les droits pour accéder à cette ressource", 403);
+
+        if (!$import->isRn()) {
             $folder = $this->file_access->getAttest();
             $pattern = "*/" . $this->parser->getAttestFileName($import, '*');
         } else {
