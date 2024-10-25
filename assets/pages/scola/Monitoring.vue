@@ -131,7 +131,7 @@ export default {
         {field: "formattedDate", headerName: "Date"},
         {
           headerName: "Nombre de fichiers", valueGetter: params => {
-            return params.data.nb_files + " / " + this.selected.nb_students;
+            return params.data.nb_files > 0 ? '+' + params.data.nb_files : params.data.nb_files /*+ " / " + this.selected.nb_students*/;
           }
         },
         {
@@ -202,7 +202,7 @@ export default {
         {
           headerName: "Nombre de transferts", valueGetter: params => {
             // console.log(params.data.history.slice(-1)[0].nb_files);
-            return params.data.history.slice(-1)[0].nb_files + " / " + params.data.nb_students;
+            return /*params.data.history.slice(-1)[0].nb_files + " / " +*/ params.data.nb_students;
           }
         },
         {

@@ -32,7 +32,7 @@
   <div id="transfert_div" class="row justify-content-md-center mt-2">
     <button type="button" class="btn btn-primary" id="btn_go" :disabled="selectedRows.length === 0" @click="OnGO">
       <span v-if="selectedRows.length === 0">Continuer</span>
-      <span v-else>Continuer ({{ this.selectedRows.length }} / {{ this.data.nb_students }})</span>
+      <span v-else>Continuer ({{ this.selectedRows.length }} / {{ this.students.length }})</span>
     </button>
   </div>
 

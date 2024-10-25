@@ -56,9 +56,9 @@ axios.interceptors.response.use(function (response) {
 
     console.log('AXIOS ERR');
 
-    if (error.response.status === 403) {
-        window.location.reload();
-    }
+    // if (error.response.status === 403) {
+    //     window.location.reload();
+    // }
 
     //But, be SURE to return the rejected promise, so the caller still has
     //the option of additional specialized handling at the call-site:
