@@ -84,8 +84,6 @@ class History
 
     public function setNbFiles(int $nb_files): void
     {
-        if ($nb_files < 0)
-            $nb_files = 0;
         $this->nb_files = $nb_files;
     }
 
@@ -98,16 +96,4 @@ class History
     {
         $this->importedData = $importedData;
     }
-
-//    public function jsonSerialize(): array
-//    {
-//        return [
-//            'id' => $this->getId(),
-//            'date' => $this->getDate()->format('d/m/Y à H:i'),
-//            'state' => $this->getState(),
-//            'nb_files' => $this->getNbFiles(),
-//            'importedDataId' => $this->getImportedData()->getId()
-//        ];
-//    }
-
 }

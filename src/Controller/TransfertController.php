@@ -68,7 +68,6 @@ class TransfertController extends AbstractController
 
         $data = $request->getSession()->get('data');
 
-
         try {
 
             for ($i = 0; $i < $batchCount && $i < count($nums); $i++) {
@@ -76,7 +75,6 @@ class TransfertController extends AbstractController
             }
 
             $request->getSession()->set('data', $data);
-
 
             $numsTodo = array_slice($nums, $i);
             unset($nums);
@@ -88,7 +86,9 @@ class TransfertController extends AbstractController
                 if ($import->getId() !== null) {
                     $existingImport = $this->repo->find($import->getId());
                     $existingImport->addHistory($import->getLastHistory());
+                    $existingImport->setNbStudents($existingImport->getNbStudents() + $import->getLastHistory()->getNbFiles());
                 } else {
+                    $import->setNbStudents($import->getLastHistory()->getNbFiles());
                     $this->em->persist($import);
                 }
                 $this->em->flush();
@@ -102,7 +102,9 @@ class TransfertController extends AbstractController
             if ($import->getId() !== null) {
                 $existingImport = $this->repo->find($import->getId());
                 $existingImport->addHistory($import->getLastHistory());
+                $existingImport->setNbStudents($existingImport->getNbStudents() + $import->getLastHistory()->getNbFiles());
             } else {
+                $import->setNbStudents($import->getLastHistory()->getNbFiles());
                 $this->em->persist($import);
             }
             $this->em->flush();

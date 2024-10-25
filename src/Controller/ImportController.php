@@ -150,8 +150,8 @@ class ImportController extends AbstractController
         $sameParams = isset($existingImport);
 
         if ($sameParams) {
-            $nbFiles = $existingImport->getHistory()->last()->getNbFiles();
-            $existingImport->addHistory(new History($nbFiles));
+//            $nbFiles = $existingImport->getHistory()->last()->getNbFiles();
+            $existingImport->addHistory(new History(0));
         } else {
             $import->addHistory(new History(0));
         }

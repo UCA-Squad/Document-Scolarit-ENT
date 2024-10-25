@@ -72,8 +72,9 @@ class MonitoringController extends AbstractController
             $folder = $fileAccess->getAttest();
 
 
-        $data->addHistory(new History($data->getHistory()->last()->getNbFiles(), History::Modified));
+        $data->addHistory(new History(0, History::Modified));
 
+        $nbDocRemoved = 0;
         foreach ($numsEtu as $numEtu) {
 
             if ($data->isRn())
@@ -85,8 +86,11 @@ class MonitoringController extends AbstractController
                 return $this->json('Impossible de supprimer le document', 500);
 
             unlink($folder . $numEtu . "/" . $filename);
-            $data->getHistory()->last()->setNbFiles($data->getHistory()->last()->getNbFiles() - 1);
+            $nbDocRemoved++;
+            $data->getHistory()->last()->setNbFiles(-$nbDocRemoved);
         }
+
+        $data->setNbStudents($data->getNbStudents() - $nbDocRemoved);
 
         $em->persist($data);
         $em->flush();
