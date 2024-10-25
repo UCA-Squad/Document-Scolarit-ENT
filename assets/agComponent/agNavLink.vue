@@ -9,7 +9,7 @@ export default {
   },
   mounted() {
     this.toPath = `/student/${this.params.data.CLFDcodeEtu}`
-    this.toName = this.params.data.CLFDcodeEtu[0];
+    this.toName = this.params.data.CLFDcodeEtu;
   },
 }
 </script>
