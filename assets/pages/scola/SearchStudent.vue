@@ -58,7 +58,6 @@ export default {
         minWidth: 100,
         editable: false,
         flex: 1,
-        menuTabs: ['columnsMenuTab'],
       },
       columnDefs: [
         {field: "CLFDcodeEtu", headerName: "Numéro", cellRenderer: agNavLink},

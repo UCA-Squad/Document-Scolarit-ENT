@@ -90,7 +90,8 @@ import {AgGridVue} from "ag-grid-vue3";
 import WebService from "../../WebService";
 import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import {displayNotif} from "../../notyf"; // Theme
+import {displayNotif} from "../../notyf";
+import {user} from "../../user"; // Theme
 
 const BtnModalComponent = {
   template: `<button data-bs-toggle="modal" :data-bs-target="this.params.modal" data-bs-backdrop="true" class="btn btn-outline-secondary mt-1"
@@ -126,6 +127,7 @@ export default {
         editable: false,
         flex: 1,
       },
+      autoSizeStrategy: { type: 'fitCellContents', skipHeader: false },
       columnDefs: this.getColDefs(),
       columnHistorique: [
         {field: "formattedDate", headerName: "Date"},
@@ -166,7 +168,7 @@ export default {
     },
     getColDefs() {
       return [
-        {field: "username", headerName: "Utilisateur"},
+        {field: "username", headerName: "Utilisateur", hide: !user.isAdmin()},
         {
           headerName: "Date de traitement", valueGetter: params => {
             return params.data.history.slice(-1)[0].formattedDate;
@@ -200,7 +202,7 @@ export default {
           }
         },
         {
-          headerName: "Nombre de transferts", valueGetter: params => {
+          headerName: "Nombre de transferts", cellClass: 'text-center', valueGetter: params => {
             // console.log(params.data.history.slice(-1)[0].nb_files);
             return /*params.data.history.slice(-1)[0].nb_files + " / " +*/ params.data.nb_students;
           }
