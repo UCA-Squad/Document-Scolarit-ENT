@@ -2,13 +2,13 @@
   "entrypoints": {
     "app": {
       "js": [
-        "build/runtime.4a257db4.js",
-        "build/178.dac37418.js",
-        "build/app.7a4d0c7e.js"
+        "build/runtime.js",
+        "build/vendors-node_modules_ag-grid-community_styles_ag-grid_css-node_modules_ag-grid-community_styl-f7cafc.js",
+        "build/app.js"
       ],
       "css": [
-        "build/178.a73563cb.css",
-        "build/app.1675f8e2.css"
+        "build/vendors-node_modules_ag-grid-community_styles_ag-grid_css-node_modules_ag-grid-community_styl-f7cafc.css",
+        "build/app.css"
       ]
     }
   }
