@@ -42,7 +42,7 @@ class Student
         $this->setLibelleObj($libelle_obj);
     }
 
-    public function LoadFile(string $tmp_dir, string $output_dir)
+    public function LoadFile(string $tmp_dir, string $output_dir): void
     {
         if (is_dir($tmp_dir . $this->getNumero())) {
             $finder = new CustomFinder();
@@ -160,22 +160,4 @@ class Student
     {
         $this->birthday = $birthday;
     }
-
-//    public function jsonSerialize(): array
-//    {
-//        return [
-//            'numero' => $this->getNumero(),
-//            'name' => $this->getName(),
-//            'surname' => $this->getSurname(),
-//            'mail' => $this->getMail(),
-//            'libelle' => $this->getLibelle(),
-//            'code' => $this->getCode(),
-//            'code_etape' => $this->getCodeEtape(),
-//            'birthday' => $this->getBirthday(),
-//            'libelle_obj' => $this->getLibelleObj(),
-//            'index' => $this->getIndex(),
-//            'file' => $this->getFile(),
-//            'type' => $this->getType()
-//        ];
-//    }
 }

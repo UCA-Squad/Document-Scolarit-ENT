@@ -48,8 +48,6 @@ class SelectionController extends AbstractController
 
         $json = $ser->serialize(['data' => $bddData, 'students' => $etu], 'json', ['groups' => ['import:read', 'student:read']]);
         return new JsonResponse($json, 200, [], true);
-
-//        return new JsonResponse(['data' => $bddData, 'students' => $etu]);
     }
 
     /**
@@ -58,7 +56,7 @@ class SelectionController extends AbstractController
     #[Route('/rebuild/{id}', name: 'rebuild_doc')]
     public function reBuild(ImportedData $import, IEtuParser $parser): JsonResponse
     {
-        $mode = empty($import->getSemestre()) && empty($import->getSession()) ? 1 : 0;
+        $mode = $import->isRn() ? 0 : 1;
         $folder = "/tmp";
 
         if (str_contains($import->getPdfFilename(), '.pdf') === false)
@@ -67,12 +65,7 @@ class SelectionController extends AbstractController
             $fileName = explode('.pdf', $import->getPdfFilename())[0];
 
         $fileName = $fileName . '_rebuild.pdf';
-
         $new_path = "$folder/$fileName";
-
-//        $etu = $request->getSession()->get('students');
-//        $transfered = $this->getEtuTransfered($request->getSession()->get('transfered'), $etu);
-
 
         if ($mode == ImportedData::ATTEST) {
             $folder = $this->file_access->getAttest();
@@ -112,42 +105,9 @@ class SelectionController extends AbstractController
                 unlink($new_path);
 
         } catch (\Exception $e) {
+            return new JsonResponse("Erreur lors de la reconstruction du document", 500);
         }
 
         return new JsonResponse("ok");
     }
-
-    /**
-     * Map les documents transférés à l'étudiant correspondant.
-     * @param array $transfered
-     * @param array $studs
-     * @return array
-     */
-    private function getEtuTransfered(array $transfered, array $studs): array
-    {
-        $res = [];
-        foreach ($studs as $stud) {
-            foreach ($transfered as $transfert) {
-                if (str_contains($transfert, $stud->getNumero())) {
-                    $res[$stud->getNumero()] = [$stud, $transfert];
-                    break;
-                }
-            }
-        }
-        return $res;
-    }
-
-//    /**
-//     * Retourne le document pdf rebuild sous forme de réponse PDF.
-//     * @param int $mode
-//     * @return BinaryFileResponse|Response
-//     */
-//    #[Route('/rebuild/{mode}', name: 'get_rebuilded_doc')]
-//    public function get_rebuilded_doc(int $mode): BinaryFileResponse|Response
-//    {
-//        $folder = $this->file_access->getTmpByMode($mode);
-//        $index = $this->finder->getFileIndex($folder, "rebuild.pdf");
-//
-//        return PdfResponse::getPdfResponse($index, $folder);
-//    }
 }

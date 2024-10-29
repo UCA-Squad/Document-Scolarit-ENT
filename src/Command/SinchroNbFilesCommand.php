@@ -28,7 +28,7 @@ class SinchroNbFilesCommand extends Command
 
         foreach ($imports as $import) {
 
-            if (empty($import->getSemestre()) && empty($import->getSession())) {
+            if (!$import->isRn()) {
                 $folder = $this->file_access->getAttest();
                 $pattern = "*/" . $this->parser->getAttestFileName($import, '*');
             } else {
