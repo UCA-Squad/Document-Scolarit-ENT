@@ -89,7 +89,7 @@ export default {
       let x = position.x * 210 / pdf_width;
       let y = position.y * 297 / pdf_height;
 
-      console.log(x, y);
+      // console.log(x, y);
 
       WebService.applyTampon(x, y).then(response => {
         this.$emit('tamponned');

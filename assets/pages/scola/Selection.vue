@@ -124,7 +124,7 @@ export default {
     },
     fetchSelection() {
       WebService.getSelection(this.mode).then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         this.data = response.data.data;
         this.students = response.data.students;
       }).catch(err => {

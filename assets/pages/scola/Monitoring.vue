@@ -160,7 +160,7 @@ export default {
   },
   methods: {
     onCellFocused(event) {
-      console.log(event.column.getColId());
+      // console.log(event.column.getColId());
       if (event.column.getColId() === 6) {
         event.api.deselectAll();
         event.api.clearFocusCell();
@@ -241,7 +241,7 @@ export default {
 
       displayNotif('Reconstruction en cours...', 'short_success')
 
-      console.log(data.id);
+      // console.log(data.id);
       WebService.rebuild(data.id).then(response => {
         displayNotif('Reconstruction finie', 'short_success')
         const contentDispositionHeader = response.headers['content-disposition'];
@@ -285,7 +285,7 @@ export default {
         return;
 
       const numsEtu = this.selectedDeleteRows.map(r => r.split('_')[0]);
-      console.log(numsEtu);
+      // console.log(numsEtu);
 
       WebService.removeFiles(this.selected.id, numsEtu).then(response => {
         // console.log(response.data);
@@ -314,7 +314,7 @@ export default {
     this.fetchRnMonitoring();
   },
   mounted() {
-    console.log(this.mode);
+    // console.log(this.mode);
   },
   beforeRouteLeave(to, from, next) {
     const myModalEl = document.querySelector('#suppressionModal');
