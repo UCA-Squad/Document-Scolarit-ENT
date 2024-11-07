@@ -117,8 +117,8 @@ class TransfertController extends AbstractController
         $from = $this->file_access->getTmpByMode($mode);
         $to = $this->file_access->getDirByMode($mode);
 
-        if (!is_dir($to)) mkdir($to);
-        if (!is_dir($to . $num)) mkdir($to . $num);
+        if (!is_dir($to)) mkdir($to, 0755);
+        if (!is_dir($to . $num)) mkdir($to . $num, 0755);
 
         $fileFrom = $this->finder->getFirstFile($from . $num);
         $index = $this->finder->getFileIndex($to . $num, $fileFrom);

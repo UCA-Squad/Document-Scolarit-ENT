@@ -204,7 +204,7 @@ class PDF
         // ini_set("max_execution_time", 0);
 
         if (!is_dir($directory) && !$setup) {
-            mkdir($directory, 0777, true);
+            mkdir($directory, 0755, true);
         }
 
         $pdf = new Fpdi();
@@ -222,7 +222,7 @@ class PDF
             else $outputDir = $this->file_access->getPdfTamponByMode($this->getFilename, 'd');
 
             if (!is_dir($outputDir)) {
-                mkdir($outputDir);
+                mkdir($outputDir, 0755);
             }
             $newPdf->setSourceFile($filename);
             // While the page owner is the same, stack the page on the same pdf document
@@ -267,7 +267,7 @@ class PDF
         // ini_set("max_execution_time", 0);
 
         if (!is_dir($directory) && !$setup) {
-            mkdir($directory, 0777, true);
+            mkdir($directory, 0755, true);
         }
 
         $pdf = new Fpdi();
@@ -284,7 +284,7 @@ class PDF
                 else $outputDir = $this->file_access->getPdfTamponByMode($this->getFilename, 'd');
 
                 if (!is_dir($outputDir)) {
-                    mkdir($outputDir);
+                    mkdir($outputDir, 0755);
                 }
                 $newPdf->setSourceFile($filename);
                 // While the page owner is the same, stack the page on the same pdf document
