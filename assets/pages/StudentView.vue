@@ -25,7 +25,7 @@
                 <h6><strong>Relevés de notes</strong></h6>
                 <ul>
                   <li v-for="rn in docs.data[year].rn"><a
-                      :href="WebService().getDownloadURL(0) + this.$route.params.num + '/'+ rn.index"
+                      :href="WebService().getDownloadURL(0) + this.num + '/'+ rn.index"
                       target="_blank">{{ rn.name }}</a></li>
                 </ul>
               </div>
@@ -33,7 +33,7 @@
                 <h6><strong>Attestations de réussite</strong></h6>
                 <ul>
                   <li v-for="attest in docs.data[year].attest"><a
-                      :href="WebService().getDownloadURL(1) + this.$route.params.num + '/'+ attest.index"
+                      :href="WebService().getDownloadURL(1) + this.num + '/'+ attest.index"
                       target="_blank">{{ attest.name }}</a></li>
                 </ul>
               </div>
@@ -60,6 +60,7 @@ export default {
   data() {
     return {
       docs: null,
+      num: 0
     }
   },
   methods: {
@@ -68,14 +69,14 @@ export default {
     },
     fetchDocs() {
 
-      let num = 0;
+      // let num = 0;
 
-      if (user.isEtudiant())
-        num = user.numero;
-      else
-        num = this.$route.params.num;
+      // if (user.isEtudiant())
+      //   num = user.numero;
+      // else
+      //   num = this.$route.params.num;
 
-      WebService.getStudentDocs(num).then(response => {
+      WebService.getStudentDocs(this.num).then(response => {
         this.docs = response.data;
         //console.log(this.docs);
       }).catch(error => {
@@ -84,6 +85,10 @@ export default {
     },
   },
   mounted() {
+    if (user.isEtudiant())
+      this.num = user.numero;
+    else
+      this.num = this.$route.params.num;
     this.fetchDocs();
   }
 }
