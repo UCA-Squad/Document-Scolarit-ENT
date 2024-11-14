@@ -3,14 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Documents de scolarite{% endblock %}</title>
+    <title>{% block title %}Documents de scolarité{% endblock %}</title>
 
     <link rel="shortcut icon" href="https://cdn.uca.fr/images/favicon/favicon.ico" type="image/x-icon">
     <link rel="icon" href="https://cdn.uca.fr/images/favicon/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdn.uca.fr/v2/css/uca.min.css">
-
-    {#    <link href="https://cdn.uca.fr/menu/css/app.css" rel="stylesheet"> #}
     <link href="https://menu.ent.uca.fr/app.css" rel="stylesheet">
 
     {% block stylesheets %}
@@ -23,11 +21,8 @@
 </head>
 <body>
 
-
 <div id="app" data-info="{{ b64Info }}"></div>
 
-{# <script defer src="https://cdn.uca.fr/menu/js/app.js"></script> #}
-{# <script defer src="https://cdn.uca.fr/menu/js/chunk-vendors.js"></script> #}
 <script type="module" src="https://menu.ent.uca.fr/app.js"></script>
 {% block body %}
 
