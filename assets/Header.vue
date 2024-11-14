@@ -25,12 +25,15 @@ export default {
 </script>
 
 <template>
-  <nav ref="depot-nav" class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav ref="depot-nav" class="navbar navbar-expand-lg navbar-dark bg-primary"
+       style="box-shadow: 0px 5px 10px 0px #9c9c9c">
     <div class="container-fluid">
 
       <span type="button" id="btnMenuEnt" class="mdi mdi-dots-grid" style="font-size: 28px; margin-right: 2px"></span>
 
-      <router-link class="navbar-brand" to="/scola">Doc Scola</router-link>
+      <router-link v-if="user.isScola()" class="navbar-brand" to="/scola">Doc Scola</router-link>
+      <a v-else class="navbar-brand" href="#">Doc Scola</a>
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
