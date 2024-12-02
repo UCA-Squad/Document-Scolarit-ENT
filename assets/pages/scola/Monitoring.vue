@@ -40,6 +40,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div class="alert alert-warning">La suppression est définitive, les étudiants n'auront plus accès aux
+              documents
+            </div>
             <ag-grid-vue v-if="this.selected !== null"
                          class="ag-theme-alpine"
                          style="height: 60vh"
@@ -127,7 +130,7 @@ export default {
         editable: false,
         flex: 1,
       },
-      autoSizeStrategy: { type: 'fitCellContents', skipHeader: false },
+      autoSizeStrategy: {type: 'fitCellContents', skipHeader: false},
       columnDefs: this.getColDefs(),
       columnHistorique: [
         {field: "formattedDate", headerName: "Date"},
@@ -147,14 +150,15 @@ export default {
       ],
       columnEdit: [
         {
-          headerName: 'Fichiers', valueGetter: params => {
-            return params.data;
-          },
+          headerName: 'Fichier', field: 'file',
           headerCheckboxSelection: true,
           checkboxSelection: true,
           headerCheckboxSelectionFilteredOnly: true, // Selectionner que les lignes filtrées
           showDisabledCheckboxes: true,
         },
+        {field: "codeEtu", headerName: "Numéro étudiant"},
+        {field: "nom", headerName: "Nom"},
+        {field: "prenom", headerName: "Prénom"},
       ]
     }
   },
@@ -284,7 +288,7 @@ export default {
       if (!confirm('Voulez-vous vraiment supprimer ' + this.selectedDeleteRows.length + ' document(s) ?'))
         return;
 
-      const numsEtu = this.selectedDeleteRows.map(r => r.split('_')[0]);
+      const numsEtu = this.selectedDeleteRows.map(r => r.codeEtu);
       // console.log(numsEtu);
 
       WebService.removeFiles(this.selected.id, numsEtu).then(response => {
