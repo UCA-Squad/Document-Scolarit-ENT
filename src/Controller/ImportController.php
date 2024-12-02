@@ -75,14 +75,16 @@ class ImportController extends AbstractController
         for ($y = 0; $y < $i; $y++) {
 
             $ldapNum = $ldapUser[$y]->getAttribute("CLFDcodeEtu")[0];
-            if ($ldapNum != $codesEtu[$y])
+
+            $codeIndex = array_search($ldapNum, $codesEtu);
+            if ($codeIndex === false)
                 return new JsonResponse("Erreur lors de la récupération des informations", 500);
 
             $infos[] = [
-                'codeEtu' => $codesEtu[$y],
+                'codeEtu' => $codesEtu[$codeIndex],
                 'nom' => $ldapUser[$y]->getAttribute("sn")[0],
                 'prenom' => $ldapUser[$y]->getAttribute("givenName")[0],
-                'file' => $files[$y]
+                'file' => $files[$codeIndex]
             ];
         }
 
