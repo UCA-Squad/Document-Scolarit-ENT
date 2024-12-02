@@ -8,6 +8,7 @@ use App\Entity\History;
 use App\Entity\ImportedData;
 use App\Exception\ImportException;
 use App\Logic\FileAccess;
+use App\Logic\LDAP;
 use App\Logic\PDF;
 use App\Parser\IEtuParser;
 use App\Repository\ImportedDataRepository;
@@ -40,7 +41,7 @@ class ImportController extends AbstractController
     }
 
     #[Route('/imported/{id}')]
-    public function getImportedFiles(ImportedData $import, Security $security): JsonResponse
+    public function getImportedFiles(ImportedData $import, Security $security, LDAP $ldap): JsonResponse
     {
         if (!$security->isGranted('ROLE_ADMIN') && $import->getUsername() !== $this->getUser()->getUserIdentifier())
             return new JsonResponse("Vous n'avez pas les droits pour accéder à cette ressource", 403);
@@ -56,7 +57,36 @@ class ImportController extends AbstractController
         $files = glob($folder . $pattern);
         foreach ($files as &$file) $file = basename($file);
 
-        return $this->json($files);
+        $codesEtu = array_map(fn($file) => explode('_', $file)[0], $files);
+
+        $query = "(|";
+        foreach ($codesEtu as $code) {
+            $query .= "(CLFDcodeEtu=$code)";
+        }
+        $query .= ")";
+        $ldapUser = $ldap->search($query, "ou=people,", ["CLFDcodeEtu", "sn", "givenName"]);
+
+        $infos = [];
+
+        $i = count($ldapUser);
+        if ($i != count($codesEtu))
+            return new JsonResponse("Erreur lors de la récupération des informations", 500);
+
+        for ($y = 0; $y < $i; $y++) {
+
+            $ldapNum = $ldapUser[$y]->getAttribute("CLFDcodeEtu")[0];
+            if ($ldapNum != $codesEtu[$y])
+                return new JsonResponse("Erreur lors de la récupération des informations", 500);
+
+            $infos[] = [
+                'codeEtu' => $codesEtu[$y],
+                'nom' => $ldapUser[$y]->getAttribute("sn")[0],
+                'prenom' => $ldapUser[$y]->getAttribute("givenName")[0],
+                'file' => $files[$y]
+            ];
+        }
+
+        return $this->json($infos);
     }
 
     #[Route('/rn', name: 'api_import_rn', methods: ['POST'])]
