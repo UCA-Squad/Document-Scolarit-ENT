@@ -26,59 +26,64 @@ export default {
 
 <template>
   <nav ref="depot-nav" class="navbar navbar-expand-lg navbar-dark bg-primary"
-       style="box-shadow: 0px 5px 10px 0px #9c9c9c">
-    <div class="container-fluid">
+       style="box-shadow: 0px 5px 10px 0px #9c9c9c;height: 50px">
+    <div class="container-fluid" style="margin: 0 5px;padding: 0">
 
-      <span type="button" id="btnMenuEnt" class="mdi mdi-dots-grid" style="font-size: 28px; margin-right: 2px"></span>
-
-      <router-link v-if="user.isScola()" class="navbar-brand" to="/scola">Doc Scola</router-link>
-      <a v-else class="navbar-brand" href="#">Doc Scola</a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li v-if="user.isScola()" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Relevés
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <router-link class="dropdown-item" to="/scola/import/rn">Import</router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/scola/monitoring/rn">Suivi</router-link>
-              </li>
-            </ul>
-          </li>
-          <li v-if="user.isScola()" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Attestations
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <router-link class="dropdown-item" to="/scola/import/attest">Import</router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/scola/monitoring/attest">Suivi</router-link>
-              </li>
-            </ul>
-          </li>
-          <li v-if="user.isScola()" class="nav-item">
-            <router-link active-class="active" class="nav-link" aria-current="page" to="/scola/search">Recherche
-              étudiant
-            </router-link>
-          </li>
-        </ul>
+      <div class="d-flex align-items-center gap-2 text-white" style="margin: 0 5px; padding: 0 3px;">
+        <span type="button" id="btnMenuEnt" class="mdi mdi-dots-grid" style="font-size: 28px; margin-right: 2px"></span>
+        <router-link v-if="user.isScola()" class="text-decoration-none text-white" to="/scola">Doc Scola</router-link>
+        <a v-else class="navbar-brand" href="#">Doc Scola</a>
       </div>
-    </div>
+
+        <button v-if="user.isScola()" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li v-if="user.isScola()" class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                 aria-expanded="false">
+                Relevés
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <router-link class="dropdown-item" to="/scola/import/rn">Import</router-link>
+                </li>
+                <li>
+                  <router-link class="dropdown-item" to="/scola/monitoring/rn">Suivi</router-link>
+                </li>
+              </ul>
+            </li>
+            <li v-if="user.isScola()" class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                 aria-expanded="false">
+                Attestations
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <router-link class="dropdown-item" to="/scola/import/attest">Import</router-link>
+                </li>
+                <li>
+                  <router-link class="dropdown-item" to="/scola/monitoring/attest">Suivi</router-link>
+                </li>
+              </ul>
+            </li>
+            <li v-if="user.isScola()" class="nav-item">
+              <router-link active-class="active" class="nav-link" aria-current="page" to="/scola/search">Recherche
+                étudiant
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
   </nav>
 
   <uca-menu
       data-opener="btnMenuEnt"
-      data-opener-class="active"
+      data-opener-class="text-info"
       data-toggle-outside="true"
       :data-top="navHeight"
       data-client="DOCSCOLA"
@@ -88,15 +93,7 @@ export default {
 </template>
 
 <style scoped>
-.navbar {
-  padding: 0.25rem 0;
-}
-
-#btnMenuEnt.active {
-  color: #009dbd;
-}
-
-#btnMenuEnt {
-  color: #fff;
+.navbar-collapse {
+  background-color: var(--bs-primary);
 }
 </style>
