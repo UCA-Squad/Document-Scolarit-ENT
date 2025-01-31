@@ -139,7 +139,7 @@ class TransfertController extends AbstractController
 
             try {
                 // Envoi sur docapost
-                $id = $this->docapost->uploadDocument($from . $num . '/' . $randName, 'test');
+                $id = $this->docapost->uploadDocument($from . $num . '/' . $randName, 'depot_uca');
 
                 $isSigned = $this->docapost->isSigned($id);
                 if (!$isSigned) {
