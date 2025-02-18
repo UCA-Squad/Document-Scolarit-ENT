@@ -120,6 +120,39 @@ class WebService {
         return axios.get(this.BASE_URL + `/api/selection/rebuild/${importId}`, {responseType: 'blob'});
     }
 
+    getUsers() {
+        return axios.get(this.BASE_URL + "/api/user/");
+    }
+
+    deleteUser(userId) {
+        return axios.delete(this.BASE_URL + "/api/user/" + userId);
+    }
+
+    addUser(user) {
+        return axios.post(this.BASE_URL + "/api/user/", {
+            'user': user
+        });
+    }
+
+    getGroups() {
+        return axios.get(this.BASE_URL + "/api/user/group/");
+    }
+
+    deleteGroup(groupId) {
+        return axios.delete(this.BASE_URL + "/api/user/group/" + groupId);
+    }
+
+    addGroup(group) {
+        return axios.post(this.BASE_URL + "/api/user/group", {
+            'group': group
+        });
+    }
+
+    findUsers(user) {
+        return axios.post(this.BASE_URL + "/api/user/search", {
+            'user': user
+        });
+    }
 }
 
 export default new WebService();

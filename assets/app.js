@@ -9,8 +9,8 @@ import MonitoringDoc from "./pages/scola/Monitoring.vue";
 import SearchStudent from "./pages/scola/SearchStudent.vue";
 import StudentView from "./pages/StudentView.vue";
 import axios from "axios";
-import WebService from "./WebService";
 import Unauthorized from "./pages/Unauthorized.vue";
+import User from "./pages/admin/User.vue";
 
 const b64 = document.querySelector('#app').dataset.info;
 const jsonUser = JSON.parse(atob(b64));
@@ -22,6 +22,8 @@ user.setNumero(jsonUser.numero);
 
 const routes = [
     {path: '/scola', component: HomeScola, meta: {requiresScola: true}},
+
+    {path: '/users', component: User, meta: {requiresAdmin: true}},
 
     {path: '/scola/import/rn', component: ImportDoc, meta: {requiresScola: true}, props: {mode: 0}},
     {path: '/scola/import/attest', component: ImportDoc, meta: {requiresScola: true}, props: {mode: 1}},
@@ -74,6 +76,9 @@ router.beforeEach((to, from, next) => {
         next({path: '/'});
     } else if (to.meta.requiresScola) {
         if (user.isScola()) next()
+        else next({path: '/'})
+    } else if (to.meta.requiresAdmin) {
+        if (user.isAdmin()) next()
         else next({path: '/'})
     } else {
         next()

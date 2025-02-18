@@ -3,15 +3,18 @@
 namespace App\Security;
 
 use App\Logic\LDAP;
+use App\Repository\UserRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use App\Entity\User;
+
 
 class UserProvider implements UserProviderInterface
 {
     private $params;
 
-    public function __construct(private LDAP $ldap, ParameterBagInterface $params)
+    public function __construct(private LDAP $ldap, private UserRepository $userRepo, ParameterBagInterface $params)
     {
         $this->params = $params;
     }
@@ -28,7 +31,7 @@ class UserProvider implements UserProviderInterface
         $affi = $this->params->get("ldap_affiliation");
         $affi_student = $this->params->get("ldap_affiliation_student");
 
-        $users = $this->ldap->search("(uid=$username)", "ou=people,", [$affi, "memberOf", $code, "mail"]);
+        $users = $this->ldap->search("(uid=$username)", "ou=people,", [$affi, "memberOf", $code, "mail", "CLFDstatus"]);
         $user = current($users);
 
         // Si l'utilisateur est admin
@@ -49,9 +52,14 @@ class UserProvider implements UserProviderInterface
         }
 
         // Si l'utilisateur fait parti du groupe LDAP gestionnaire
-        if ($user->hasAttribute("memberOf") && in_array($this->params->get("ldap")["admin_group"], $user->getAttribute("memberOf"))) {
-            $mail = current($user->getAttribute('mail'));
-            return new User($username, ["ROLE_SCOLA"], $mail);
+//        if ($user->hasAttribute("memberOf") && in_array($this->params->get("ldap")["admin_group"], $user->getAttribute("memberOf"))) {
+//            $mail = current($user->getAttribute('mail'));
+//            return new User($username, ["ROLE_SCOLA"], $mail);
+//        }
+        $bddUser = $this->userRepo->findOneBy(['username' => $username]);
+        if ($bddUser && current($user->getAttribute('CLFDstatus')) == 9) {
+            $bddUser->setRoles(["ROLE_SCOLA"]);
+            return $bddUser;
         }
 
         return new User($username, ['ROLE_ANONYMOUS']);

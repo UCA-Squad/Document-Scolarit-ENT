@@ -8,6 +8,7 @@ use App\Entity\History;
 use App\Logic\FileAccess;
 use App\Parser\EtuParser;
 use App\Repository\ImportedDataRepository;
+use App\Repository\UserGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,10 +22,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class MonitoringController extends AbstractController
 {
     #[Route('/rn', name: 'get_monitoring_rn')]
-    public function get_monitoring_rn(ImportedDataRepository $importedDataRepository, SerializerInterface $ser): JsonResponse
+    public function get_monitoring_rn(ImportedDataRepository $importedDataRepository, SerializerInterface $ser, UserGroupRepository $userGroupRepo): JsonResponse
     {
         if (in_array("ROLE_ADMIN", $this->getUser()->getRoles()))
             $imports = $importedDataRepository->findAllRns();
+        else if (!empty($usernames = $userGroupRepo->getUsernamesByResponsable($this->getUser()->getUserIdentifier())))
+            $imports = $importedDataRepository->findRnsByUsernames($usernames);
         else
             $imports = $importedDataRepository->findAllRns($this->getUser()->getUserIdentifier());
 
@@ -38,10 +41,12 @@ class MonitoringController extends AbstractController
     }
 
     #[Route('/attest', name: 'get_monitoring_attest')]
-    public function monitoring_attest(ImportedDataRepository $importedDataRepository, SerializerInterface $ser): Response
+    public function monitoring_attest(ImportedDataRepository $importedDataRepository, SerializerInterface $ser, UserGroupRepository $userGroupRepo): Response
     {
         if (in_array("ROLE_ADMIN", $this->getUser()->getRoles()))
             $imports = $importedDataRepository->findAllAttests();
+        else if (!empty($usernames = $userGroupRepo->getUsernamesByResponsable($this->getUser()->getUserIdentifier())))
+            $imports = $importedDataRepository->findAttestsByUsernames($usernames);
         else
             $imports = $importedDataRepository->findAllAttests($this->getUser()->getUserIdentifier());
 
@@ -55,7 +60,7 @@ class MonitoringController extends AbstractController
     }
 
     #[Route('/delete', name: 'api_delete_file', methods: ['POST'])]
-    public function removeFile(Request $request, ImportedDataRepository $repo, FileAccess $fileAccess, EtuParser $parser, EntityManagerInterface $em, SerializerInterface $ser): JsonResponse
+    public function removeFile(Request $request, ImportedDataRepository $repo, FileAccess $fileAccess, EtuParser $parser, EntityManagerInterface $em, SerializerInterface $ser, UserGroupRepository $userGroupRepo): JsonResponse
     {
         $params = json_decode($request->getContent(), true);
 
@@ -65,6 +70,9 @@ class MonitoringController extends AbstractController
         $data = $repo->find($dataId);
         if (!isset($data) || empty($numsEtu))
             return $this->json('Missing params', 403);
+
+        if (!$this->isGranted("ROLE_ADMIN") && !$userGroupRepo->hasRightOn($data, $this->getUser()->getUserIdentifier()))
+            return $this->json('Unauthorized', 403);
 
         if ($data->isRn())
             $folder = $fileAccess->getRn();

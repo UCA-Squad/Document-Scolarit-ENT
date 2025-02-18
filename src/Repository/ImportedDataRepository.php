@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\ImportedData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,6 +40,19 @@ class ImportedDataRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findRnsByUsernames(array $usernames)
+    {
+        return $this->createQueryBuilder('i')
+            ->where('i.semestre != :semestre')
+            ->andWhere('i.session != :session')
+            ->andWhere('i.username IN (:usernames)')
+            ->setParameter('semestre', '')
+            ->setParameter('session', '')
+            ->setParameter('usernames', $usernames, ArrayParameterType::STRING)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findAllAttests(string $username = null)
     {
         $query = $this->createQueryBuilder('i')
@@ -55,6 +69,17 @@ class ImportedDataRepository extends ServiceEntityRepository
         return $query->getQuery()
             ->getResult();
     }
+
+    public function findAttestsByUsernames(array $usernames){
+        return $this->createQueryBuilder('i')
+            ->where('i.semestre is NULL')
+            ->andWhere('i.session is NULL')
+            ->andWhere('i.username IN (:usernames)')
+            ->setParameter('usernames', $usernames, ArrayParameterType::STRING)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     /**
      * Return the last attestation ImportedData for the user 'username'.
@@ -171,5 +196,15 @@ class ImportedDataRepository extends ServiceEntityRepository
         return $query->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findUsernameByNotIn(array $bddUserNames)
+    {
+        return $this->createQueryBuilder('i')
+            ->select('DISTINCT i.username')
+            ->where("i.username NOT IN (:names)")
+            ->setParameter('names', $bddUserNames, ArrayParameterType::STRING)
+            ->getQuery()
+            ->getResult();
     }
 }

@@ -102,7 +102,7 @@ export default {
       WebService.importRn(this.mode, this.rn).then(response => {
         this.$emit('imported', response.data);
       }).catch(err => {
-        console.log(err.response.data.error);
+        // console.log(err.response.data.error);
         if (err.response.data.error !== undefined)
           displayNotif(err.response.data.error, "error");
         else

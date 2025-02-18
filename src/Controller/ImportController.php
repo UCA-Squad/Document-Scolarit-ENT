@@ -12,6 +12,7 @@ use App\Logic\LDAP;
 use App\Logic\PDF;
 use App\Parser\IEtuParser;
 use App\Repository\ImportedDataRepository;
+use App\Repository\UserGroupRepository;
 use setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException;
 use setasign\Fpdi\PdfParser\Filter\FilterException;
 use setasign\Fpdi\PdfParser\PdfParserException;
@@ -35,15 +36,15 @@ class ImportController extends AbstractController
     private SessionInterface $session;
 
     public function __construct(private FileAccess             $file_access, private IEtuParser $parser, RequestStack $session,
-                                private ImportedDataRepository $repo, private PDF $pdfTool)
+                                private ImportedDataRepository $repo, private PDF $pdfTool, private UserGroupRepository $userGroupRepo)
     {
         $this->session = $session->getSession();
     }
 
     #[Route('/imported/{id}')]
-    public function getImportedFiles(ImportedData $import, Security $security, LDAP $ldap): JsonResponse
+    public function getImportedFiles(ImportedData $import, Security $security, LDAP $ldap, UserGroupRepository $userGroupRepo): JsonResponse
     {
-        if (!$security->isGranted('ROLE_ADMIN') && $import->getUsername() !== $this->getUser()->getUserIdentifier())
+        if (!$security->isGranted('ROLE_ADMIN') && !$userGroupRepo->hasRightOn($import, $this->getUser()->getUserIdentifier()))
             return new JsonResponse("Vous n'avez pas les droits pour accéder à cette ressource", 403);
 
         if (!$import->isRn()) {
@@ -180,6 +181,12 @@ class ImportController extends AbstractController
         ]);
 
         $sameParams = isset($existingImport);
+
+        if ($sameParams) {
+            $hasRight = $this->userGroupRepo->hasRightOn($existingImport, $this->getUser()->getUserIdentifier());
+            if (!$hasRight)
+                return new JsonResponse(['error' => "Vous n'avez pas le droit de modifier cet import"], 403);
+        }
 
         if ($sameParams) {
 //            $nbFiles = $existingImport->getHistory()->last()->getNbFiles();
